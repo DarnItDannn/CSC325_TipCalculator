@@ -39,6 +39,7 @@ public class HelloController {
     // calculates and displays the tip and total amounts
     @FXML
     private void calculateButtonPressed(ActionEvent event) {
+
         try {
             BigDecimal amount = new BigDecimal(amountTextField.getText());
             BigDecimal tip = amount.multiply(tipPercentage);
@@ -52,6 +53,28 @@ public class HelloController {
             amountTextField.selectAll();
             amountTextField.requestFocus();
         }
+    tipPercentageSlider.valueProperty().addListener(new ChangeListener<Number>() {
+
+
+        @Override
+        public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+            try {
+                BigDecimal amount = new BigDecimal(amountTextField.getText());
+                BigDecimal tip = amount.multiply(tipPercentage);
+                BigDecimal total = amount.add(tip);
+
+                tipTextField.setText(currency.format(tip));
+                totalTextField.setText(currency.format(total));
+            }
+            catch (NumberFormatException ex) {
+                amountTextField.setText("Enter amount");
+                amountTextField.selectAll();
+                amountTextField.requestFocus();
+            }
+
+        }
+    });
+
     }
 
     // called by FXMLLoader to initialize the controller
@@ -71,20 +94,25 @@ public class HelloController {
                     }
                 }
         );
+
+        amountTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                try {
+                    BigDecimal amount = new BigDecimal(amountTextField.getText());
+                    BigDecimal tip = amount.multiply(tipPercentage);
+                    BigDecimal total = amount.add(tip);
+
+                    tipTextField.setText(currency.format(tip));
+                    totalTextField.setText(currency.format(total));
+                }
+                catch (NumberFormatException ex) {
+                    amountTextField.setText("Enter amount");
+                    amountTextField.selectAll();
+                    amountTextField.requestFocus();
+                }
+            }
+        });
     }
 }
 
-/**************************************************************************
- * (C) Copyright 1992-2018 by Deitel & Associates, Inc. and               *
- * Pearson Education, Inc. All Rights Reserved.                           *
- *                                                                        *
- * DISCLAIMER: The authors and publisher of this book have used their     *
- * best efforts in preparing the book. These efforts include the          *
- * development, research, and testing of the theories and programs        *
- * to determine their effectiveness. The authors and publisher make       *
- * no warranty of any kind, expressed or implied, with regard to these    *
- * programs or to the documentation contained in these books. The authors *
- * and publisher shall not be liable in any event for incidental or       *
- * consequential damages in connection with, or arising out of, the       *
- * furnishing, performance, or use of these programs.                     *
- *************************************************************************/
